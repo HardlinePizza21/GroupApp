@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  memberships GroupMember[]
+  messages    Message[]
+}
+
+model Group {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  ownerId     Int
+  createdAt   DateTime @default(now())
+
+  members  GroupMember[]
+  channels Channel[]
+}
+
+model GroupMember {
+  id      Int  @id @default(autoincrement())
+  userId  Int
+  groupId Int
+  role    String
+
+  user  User  @relation(fields: [userId], references: [id])
+  group Group @relation(fields: [groupId], references: [id])
+}
+
+model Channel {
+  id        Int      @id @default(autoincrement())
+  name      String
+  groupId   Int
+  createdAt DateTime @default(now())
+
+  group    Group     @relation(fields: [groupId], references: [id])
+  messages Message[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String
+  senderId  Int
+  channelId Int
+  createdAt DateTime @default(now())
+
+  sender  User    @relation(fields: [senderId], references: [id])
+  channel Channel @relation(fields: [channelId], references: [id])
+}
