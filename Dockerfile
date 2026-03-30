@@ -1,10 +1,10 @@
 FROM node:20
 
-WORKDIR /app
+WORKDIR /
 
 COPY package*.json ./
 RUN npm install
 
 COPY . .
 
-CMD ["node", "src/server.js"]
+CMD ["node", "/server.js"]
