@@ -20,7 +20,7 @@ services:
     env_file:
       #! En produccion cambiar las variables de entorno
       #- .env.production
-      - .env
+      - .docker.env
     volumes:
       - .:/app
     depends_on:
