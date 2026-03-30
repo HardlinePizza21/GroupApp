@@ -5,7 +5,7 @@ export default function authSocket(io) {
     try {
       const token = socket.handshake.auth.token;
 
-      const decoded = verifyToken(token);
+      const decoded = verifyToken(token, process.env.JWT_SECRET);
 
       socket.user = decoded;
 

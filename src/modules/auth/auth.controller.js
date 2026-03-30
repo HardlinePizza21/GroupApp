@@ -16,7 +16,29 @@ export const login = async (req, res) => {
 
 };
 
+export const register = async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+
+    // validación básica (suficiente para universidad)
+    if (!username || !email || !password) {
+      return res.status(400).json({
+        error: "All fields are required"
+      });
+    }
+
+    const result = await authService.register(username, email, password);
+
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(400).json({
+      error: error.message
+    });
+  }
+}
+
 export const refresh = async (req, res) => {
+
   const { refreshToken } = req.body;
 
   const result = await authService.refresh(refreshToken);

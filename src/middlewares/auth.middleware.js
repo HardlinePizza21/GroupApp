@@ -8,7 +8,7 @@ export default function authMiddleware(req, res, next) {
   }
 
   try {
-    const decoded = verifyToken(token);
+    const decoded = verifyToken(token, process.env.JWT_SECRET);
 
     req.user = decoded;
 
