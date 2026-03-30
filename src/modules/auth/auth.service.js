@@ -88,8 +88,6 @@ export const refresh = async (refreshToken) => {
     const storedToken = await prisma.refreshToken.findUnique({
       where: { token: refreshToken }
     });
-    console.log("Incoming token:", refreshToken);
-    console.log("DB token:", storedToken?.token);
 
     if (!storedToken) {
       throw new Error("Invalid refresh token");

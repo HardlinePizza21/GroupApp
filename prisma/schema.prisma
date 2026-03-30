@@ -59,7 +59,11 @@ model Channel {
 
 model Message {
   id        Int      @id @default(autoincrement())
-  content   String
+  content   String?
+  fileUrl   String?
+  fileType  String?
+  status    String   @default("SENT") // SENT, DELIVERED, READ
+
   senderId  Int
   channelId Int
   createdAt DateTime @default(now())
