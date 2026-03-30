@@ -21,6 +21,9 @@ model User {
 
   memberships GroupMember[]
   messages    Message[]
+
+  refreshTokens RefreshToken[]
+
 }
 
 model Group {
@@ -63,4 +66,13 @@ model Message {
 
   sender  User    @relation(fields: [senderId], references: [id])
   channel Channel @relation(fields: [channelId], references: [id])
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
