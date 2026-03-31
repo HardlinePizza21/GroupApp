@@ -7,4 +7,8 @@ RUN npm install
 
 COPY . .
 
+
+# 🔥 GENERAR CLIENTE PRISMA
+RUN npx prisma generate
+
 CMD ["node", "/server.js"]
