@@ -41,7 +41,7 @@ model GroupMember {
   id      Int  @id @default(autoincrement())
   userId  Int
   groupId Int
-  role    String
+  role    String // "ADMIN" | "MEMBER"
 
   user  User  @relation(fields: [userId], references: [id])
   group Group @relation(fields: [groupId], references: [id])
