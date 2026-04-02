@@ -35,6 +35,15 @@ export const updateGroup = async (groupId, userId, data) => {
   });
 };
 
+export const getMyGroups = async (userId) => {
+  const memberships = await prisma.groupMember.findMany({
+    where: { userId: userId },
+    include: { group: true },
+  });
+  const groups = memberships.map((m) => ({ ...m.group, role: m.role }));
+  return groups;
+};
+
 // 👥 Invitar usuario
 export const inviteUser = async (groupId, userId, targetUserId) => {
 

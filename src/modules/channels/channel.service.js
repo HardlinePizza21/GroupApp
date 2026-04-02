@@ -1,10 +1,10 @@
 import prisma from "../../config/db.js";
-import { isAdmin } from "../groups/group.utils.js";
+import { isAdmin } from "../../utils/prisma.js";
 
 // 🔥 Crear canal
 export const createChannel = async (groupId, userId, name) => {
   // verificar admin
-  const admin = await isAdmin(groupId, userId);
+  const admin = await isAdmin(userId, groupId);
 
   if (!admin) {
     throw new Error("Not authorized");

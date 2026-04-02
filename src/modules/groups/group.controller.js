@@ -40,6 +40,17 @@ export const updateGroup = async (req, res) => {
   }
 };
 
+// GET /groups/my
+export const getMyGroups = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const groups = await groupService.getMyGroups(userId);
+    res.json(groups);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // POST /groups/:id/invite
 export const inviteUser = async (req, res) => {
   try {
