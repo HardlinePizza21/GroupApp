@@ -1,0 +1,147 @@
+/* ── Auth Page ── */
+
+.auth-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-base);
+}
+
+/* Grid background */
+.auth-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 40%, transparent 100%);
+}
+
+/* Glow */
+.auth-root::before {
+  content: "";
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.08) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Brand */
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: fadeIn 400ms both;
+}
+
+.auth-logo {
+  width: 36px;
+  height: 36px;
+  background: var(--accent);
+  color: #041a18;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.auth-logo-text {
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+/* Card */
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: slideUp 350ms 100ms both;
+  box-shadow:
+    0 0 0 1px var(--border),
+    0 32px 80px rgba(0, 0, 0, 0.6),
+    0 0 40px var(--accent-glow);
+  position: relative;
+  z-index: 1;
+}
+
+.auth-card-header { display: flex; flex-direction: column; gap: 6px; }
+
+.auth-title {
+  font-family: "Syne", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.auth-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-submit {
+  width: 100%;
+  padding: 11px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 4px;
+  border-radius: 8px;
+  letter-spacing: 0.01em;
+}
+
+/* Toggle */
+.auth-toggle {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 13px;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 500;
+  padding: 0;
+  transition: opacity var(--t-fast);
+}
+.auth-toggle-btn:hover { opacity: 0.75; }
+
+.auth-footer {
+  animation: fadeIn 600ms 300ms both;
+}

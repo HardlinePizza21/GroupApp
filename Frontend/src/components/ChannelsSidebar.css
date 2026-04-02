@@ -1,0 +1,138 @@
+/* ── Channels Sidebar ── */
+
+.ch-sidebar {
+  width: var(--sidebar-channels);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* Header */
+.ch-header {
+  padding: 16px 14px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ch-group-name {
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ch-group-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ch-header-actions {
+  margin-top: 8px;
+}
+
+.ch-invite-btn {
+  font-size: 12px;
+  padding: 5px 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Section label */
+.ch-section-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ch-add-ch { color: var(--text-muted); }
+.ch-add-ch:hover { color: var(--accent); background: var(--accent-glow); }
+
+/* Channel list */
+.ch-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.ch-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+  color: var(--text-secondary);
+  animation: slideInLeft 180ms both;
+}
+
+.ch-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.ch-item.active {
+  background: var(--bg-active);
+  color: var(--text-primary);
+}
+
+.ch-hash {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.ch-item.active .ch-hash,
+.ch-item:hover .ch-hash {
+  color: var(--accent);
+}
+
+.ch-name {
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Empty */
+.ch-empty {
+  padding: 20px 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.8;
+}
+
+.ch-empty-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  padding: 0;
+}
+.ch-empty-btn:hover { text-decoration: underline; }

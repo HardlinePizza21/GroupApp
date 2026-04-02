@@ -1,0 +1,46 @@
+/* ── Chat Page — 3-panel layout ── */
+
+.chat-root {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-base);
+}
+
+/* Empty states */
+.chat-empty-sidebar {
+  width: var(--sidebar-channels);
+  border-right: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.chat-empty-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text-secondary);
+}
+
+.chat-empty-icon {
+  font-size: 48px;
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.chat-empty-main h2 {
+  font-family: "Syne", sans-serif;
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+.chat-empty-main p {
+  font-size: 13px;
+  color: var(--text-muted);
+}

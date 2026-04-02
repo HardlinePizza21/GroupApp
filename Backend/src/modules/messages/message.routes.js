@@ -5,6 +5,8 @@ import { upload } from "../../utils/storage/local.storage.js";
 
 const router = Router();
 
+// obtener mensajes de un canal
+router.get("/channels/:channelId/messages", authMiddleware, controller.getMessages);
 // enviar mensaje con archivo opcional
 router.post(
     "/channels/:channelId/messages",

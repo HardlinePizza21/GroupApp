@@ -1,0 +1,121 @@
+/* ── Message Input ── */
+
+.mi-root {
+  padding: 12px 20px 16px;
+  background: var(--bg-base);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── File preview strip ── */
+.mi-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  position: relative;
+}
+
+.mi-preview-img {
+  height: 56px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.mi-preview-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.mi-preview-file svg { color: var(--accent); }
+
+.mi-preview-size { color: var(--text-muted); }
+
+.mi-preview-clear {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.mi-preview-clear:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+/* ── Input bar ── */
+.mi-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 6px 6px 6px 8px;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+
+.mi-bar:focus-within {
+  border-color: var(--border-light);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* Attach button */
+.mi-attach {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  padding: 6px;
+  margin-bottom: 2px;
+}
+.mi-attach:hover { color: var(--accent); background: var(--accent-glow); }
+
+/* Textarea */
+.mi-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: none;
+  max-height: 120px;
+  overflow-y: auto;
+  padding: 5px 4px;
+}
+.mi-input::placeholder { color: var(--text-muted); }
+
+/* Send button */
+.mi-send {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 8px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+}
+.mi-send.active {
+  background: var(--accent);
+  color: #041a18;
+  border-color: var(--accent);
+}
+.mi-send.active:hover { background: #3ee8d3; }

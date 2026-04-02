@@ -1,0 +1,159 @@
+/* ── Groups Sidebar — narrow icon rail ── */
+
+.groups-sidebar {
+  width: var(--sidebar-groups);
+  background: var(--bg-base);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  gap: 4px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Brand logo */
+.gs-brand { padding: 4px 0 8px; }
+.gs-logo {
+  width: 36px;
+  height: 36px;
+  background: var(--accent);
+  color: #041a18;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+}
+
+/* Divider */
+.gs-divider {
+  width: 32px;
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+  flex-shrink: 0;
+}
+
+/* Groups nav */
+.gs-groups {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 0 4px;
+}
+
+/* Group item wrapper */
+.gs-group-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Active indicator bar */
+.gs-active-bar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  background: var(--accent);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Avatar */
+.gs-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: #fff;
+  cursor: pointer;
+  transition: border-radius var(--t-med), filter var(--t-fast);
+  flex-shrink: 0;
+  user-select: none;
+}
+.gs-group-item:hover .gs-avatar { border-radius: 14px; }
+.gs-group-item.active .gs-avatar { border-radius: 14px; }
+.gs-group-item:not(.active):not(:hover) .gs-avatar { filter: brightness(0.7) saturate(0.6); }
+
+/* Skeleton */
+.gs-skeleton {
+  background: var(--bg-elevated);
+  animation: pulse 1.4s infinite;
+}
+
+/* Add group */
+.gs-avatar-add {
+  background: var(--bg-elevated);
+  border: 1px dashed var(--border-light);
+  color: var(--text-secondary);
+  font-size: 20px;
+  font-weight: 300;
+}
+.gs-add:hover .gs-avatar-add {
+  background: var(--accent-glow);
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+
+/* Bottom area */
+.gs-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 4px;
+  width: 100%;
+}
+
+/* Status dot */
+.gs-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.gs-status.online  { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.gs-status.offline { background: var(--text-muted); }
+
+/* User avatar */
+.gs-avatar-user {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+/* Logout */
+.gs-avatar-logout {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 18px;
+}
+.gs-logout:hover .gs-avatar-logout { color: var(--danger); background: rgba(248,113,113,0.08); }
+
+/* Loading */
+.gs-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 0 4px;
+}
