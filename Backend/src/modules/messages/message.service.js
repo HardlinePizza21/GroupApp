@@ -12,16 +12,14 @@ export const getMesseges = async (channelId, page = 1, limit = 50) => {
 
     const messagesWithUrls = await Promise.all(
         messages.map(async (msg) => {
-            if (msg.fileKey) {
-                const url = await getFileUrl(msg.fileKey);
-                return {
-                    ...msg,
-                    fileUrl: url,
-                };
-            }
-            return msg;
+            const url = await getFileUrl(msg.fileUrl);
+            return {
+                ...msg,
+                fileUrl: url,
+            };
+
         })
-    );  
+    );
 
     return messagesWithUrls;
 };
