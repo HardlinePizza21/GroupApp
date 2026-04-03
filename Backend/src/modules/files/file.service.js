@@ -31,3 +31,16 @@ export const uploadToS3 = async (file) => {
     type: file.mimetype,
   };
 };
+
+export const getFileUrl = async (key) => {
+  const getCommand = new GetObjectCommand({
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: key,
+  });
+
+  const signedUrl = await getSignedUrl(s3, getCommand, {
+    expiresIn: 3600, // 1 hora
+  });
+
+  return signedUrl;
+}

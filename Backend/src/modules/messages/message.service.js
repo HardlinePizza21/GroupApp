@@ -9,7 +9,21 @@ export const getMesseges = async (channelId, page = 1, limit = 50) => {
         skip: (page - 1) * limit,
         take: limit,
     });
-    return messages;
+
+    const messagesWithUrls = await Promise.all(
+        messages.map(async (msg) => {
+            if (msg.fileKey) {
+                const url = await getFileUrl(msg.fileKey);
+                return {
+                    ...msg,
+                    fileUrl: url,
+                };
+            }
+            return msg;
+        })
+    );  
+
+    return messagesWithUrls;
 };
 
 export const createMessage = async (
@@ -19,13 +33,16 @@ export const createMessage = async (
     file
 ) => {
     let fileData = null;
+    let result = null;
+
+
 
     if (file) {
         // 🔥 subir a S3
-        const result = await uploadToS3(file);
+        result = await uploadToS3(file);
 
         fileData = {
-            fileUrl: result.url,
+            fileUrl: result.key,
             fileType: result.type
         };
     }
@@ -39,6 +56,9 @@ export const createMessage = async (
             ...fileData
         }
     });
+
+    console.log(message)
+    message.fileUrl = result.url
 
     return message;
 };
