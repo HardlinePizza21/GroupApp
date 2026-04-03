@@ -1,4 +1,5 @@
 import prisma from "../../config/db.js";
+import { uploadToS3 } from "../files/file.service.js";
 
 export const getMesseges = async (channelId, page = 1, limit = 50) => {
     const messages = await prisma.message.findMany({
@@ -20,11 +21,15 @@ export const createMessage = async (
     let fileData = null;
 
     if (file) {
+        // 🔥 subir a S3
+        const result = await uploadToS3(file);
+
         fileData = {
-            fileUrl: `/uploads/${file.filename}`,
-            fileType: file.mimetype
+            fileUrl: result.url,
+            fileType: result.type
         };
     }
+
 
     const message = await prisma.message.create({
         data: {
