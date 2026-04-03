@@ -3,5 +3,4 @@ node_modules
 /uploads
 /src/generated/prisma
 
-.production.env
-.docker.env
+.env
