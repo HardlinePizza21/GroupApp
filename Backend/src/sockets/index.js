@@ -9,8 +9,19 @@ export default function initSockets(server) {
 
   authSocket(io);
 
+  const onlineUsers = new Set();
+
   io.on("connection", (socket) => {
-    console.log("User connected:", socket.user.userId);
+    const userId = socket.user.userId;
+
+    onlineUsers.add(userId);
+
+    io.emit("user_online", userId);
+
+    socket.on("disconnect", () => {
+      onlineUsers.delete(userId);
+      io.emit("user_offline", userId);
+    });
 
     messageHandler(socket, io);
   });
