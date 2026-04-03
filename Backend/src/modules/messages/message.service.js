@@ -25,7 +25,7 @@ export const createMessage = async (
         const result = await uploadToS3(file);
 
         fileData = {
-            fileUrl: result.key,
+            fileUrl: result.url,
             fileType: result.type
         };
     }
