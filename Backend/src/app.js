@@ -5,6 +5,7 @@ import authRoutes from "./modules/auth/auth.routes.js";
 import groupRoutes from "./modules/groups/group.routes.js";
 import channelRoutes from "./modules/channels/channel.routes.js";
 import messageRoutes from "./modules/messages/message.routes.js";
+import fileRoutes from "./modules/files/file.routes.js";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/auth", authRoutes);
 app.use("/groups", groupRoutes);
 app.use("", channelRoutes);
 app.use("", messageRoutes);
+app.use("", fileRoutes);
 
 app.get("/", (req, res) => {
   res.send("API running");
