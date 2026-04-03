@@ -10,8 +10,7 @@ export function useSocket({ token, onMessage, onConnect, onDisconnect }) {
     if (!token) return;
 
     const socket = io(SOCKET_URL, {
-      auth: { token },
-      transports: ["websocket"],
+      auth: { token }
     });
 
     socketRef.current = socket;
