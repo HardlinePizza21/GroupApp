@@ -6,7 +6,6 @@ let envFile = ".env";
 dotenv.config({ path: envFile });
 
 process.env.DATABASE_URL
-console.log()
 export default {
   PORT: process.env.PORT,
   DATABASE_URL: process.env.DATABASE_URL,

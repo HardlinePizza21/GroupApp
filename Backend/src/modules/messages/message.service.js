@@ -1,5 +1,6 @@
 import prisma from "../../config/db.js";
-import { uploadToS3 } from "../files/file.service.js";
+import { getFileUrl, uploadToS3 } from "../files/file.service.js";
+
 
 export const getMesseges = async (channelId, page = 1, limit = 50) => {
     const messages = await prisma.message.findMany({
