@@ -1,20 +1,32 @@
 import prisma from "../../config/db.js";
 import { getFileUrl, uploadToS3 } from "../files/file.service.js";
 
-export const getMessage = async(messageId) => {
+export const getMessage = async (messageId) => {
 
-    const message = await prisma.message.findFirst({
-        where: {id: parseInt(messageId)}
-    })
+    const message = await prisma.message.findUnique({
+        where: { id: messageId },
+        include: {
+            sender: {
+                select: { id: true, username: true }
+            }
+        }
+    });
 
-    const url = await getFileUrl(message.fileUrl)
+    if (!message) {
+        throw new Error("Message not found");
+    }
+
+    let fileUrl = null;
+
+    if (message.fileUrl) {
+        fileUrl = await getFileUrl(message.fileUrl);
+    }
 
     return {
         ...message,
-        fileUrl: url
-    }
-
-}
+        fileUrl
+    };
+};
 
 export const getMesseges = async (channelId, page = 1, limit = 50) => {
     const messages = await prisma.message.findMany({
