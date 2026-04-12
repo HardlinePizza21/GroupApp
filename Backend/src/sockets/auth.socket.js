@@ -5,10 +5,12 @@ export default function authSocket(io) {
     try {
       const token = socket.handshake.auth.token;
 
-      const decoded = verifyToken(token, process.env.JWT_SECRET);
-
-      socket.user = decoded;
-
+      // const decoded = verifyToken(token, process.env.JWT_SECRET);
+      //!Para pruebas
+      // socket.user = decoded;
+      socket.user = {
+        userId: 1
+      }
       next();
     } catch (err) {
       next(new Error("Unauthorized"));
