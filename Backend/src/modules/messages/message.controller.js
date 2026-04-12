@@ -1,15 +1,16 @@
 import * as messageService from "./message.service.js";
 
-export const getMessage = async(req, res) => {
+export const getMessage = async (req, res) => {
     try {
-        const channelId = parseInt(req.params.channelId)
-        const messageId = parseInt(req.query.messageId)
-        const message = await messageService.getMessage(messageId)
-        res.json(message)
-    }catch(err){
+        const messageId = parseInt(req.params.messageId);
+
+        const message = await messageService.getMessage(messageId);
+
+        res.json(message);
+    } catch (err) {
         res.status(400).json({ error: err.message });
     }
-}
+};
 
 export const getMessages = async (req, res) => {
     try {
