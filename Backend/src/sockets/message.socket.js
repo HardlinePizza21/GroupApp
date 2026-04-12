@@ -12,10 +12,7 @@ export default function messageHandler(socket, io) {
 
       // 2. Emitir evento ligero (NO mandar todo el mensaje)
       io.to(data.channelId).emit("message:new", {
-        messageId: message.id,
-        channelId: data.channelId,
-        senderId: userId,
-        createdAt: message.createdAt
+        messageId: data.messageId,
       });
 
     } catch (error) {
