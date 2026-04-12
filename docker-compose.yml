@@ -1,0 +1,66 @@
+#!For EC2
+# version: "3.8"
+
+# services:
+#   backend:
+#     build: ./Backend
+#     container_name: backend
+#     ports:
+#       - "3000:3000"
+#     env_file:
+#       - ./Backend/.env
+#     volumes:
+#       - ./Backend:/app
+#     restart: always
+
+#   frontend:
+#     build: ./Frontend
+#     container_name: frontend
+#     ports:
+#       - "5173:5173"
+#     volumes:
+#       - ./Frontend:/app
+#       - /app/node_modules
+#     depends_on:
+#       - backend
+#     restart: always
+
+version: "3.8"
+
+#TODO: For Local
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: app
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./Backend
+    container_name: backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./Backend/.env
+    depends_on:
+      - postgres
+    volumes:
+      - ./Backend:/app
+
+  frontend:
+    build: ./Frontend
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
