@@ -1,22 +1,33 @@
-import * as messageService from "../modules/messages/message.service.js";
+import prisma from "../config/db.js";
 
 export default function messageHandler(socket, io) {
 
   socket.on("join_channel", (channelId) => {
-    socket.join(channelId);
+    socket.join(`channel_${channelId}`);
   });
 
-  socket.on("chat_message", async (data) => {
+  socket.on("send_message", async (data) => {
     try {
-      const userId = socket.user.id;
+      const { channelId, content } = data;
 
-      // 2. Emitir evento ligero (NO mandar todo el mensaje)
-      io.to(data.channelId).emit("message:new", {
-        messageId: data.messageId,
+      const message = await prisma.message.create({
+        data: {
+          content: content || null,
+          senderId: socket.user.userId,
+          channelId: parseInt(channelId),
+          status: "SENT"
+        },
+        include: {
+          sender: {
+            select: { id: true, username: true }
+          }
+        }
       });
 
-    } catch (error) {
-      console.error(error);
+      io.to(`channel_${channelId}`).emit("receive_message", message);
+
+    } catch (err) {
+      console.error(err);
       socket.emit("error", { message: "Error enviando mensaje" });
     }
   });

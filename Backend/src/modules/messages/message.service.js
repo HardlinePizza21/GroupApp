@@ -39,7 +39,7 @@ export const getMesseges = async (channelId, page = 1, limit = 50) => {
 
     const messagesWithUrls = await Promise.all(
         messages.map(async (msg) => {
-            const url = await getFileUrl(msg.fileUrl);
+            const url = msg.fileUrl ? await getFileUrl(msg.fileUrl) : null;
             return {
                 ...msg,
                 fileUrl: url,
@@ -58,7 +58,7 @@ export const createMessage = async (
     file
 ) => {
     let fileData = null;
-    let result = null;
+    let result = { url: null };
 
 
 
@@ -83,7 +83,9 @@ export const createMessage = async (
     });
 
     console.log(message)
-    message.fileUrl = result.url
+    if (result?.url) {
+        message.fileUrl = result.url;
+    }
 
     return message;
 };
