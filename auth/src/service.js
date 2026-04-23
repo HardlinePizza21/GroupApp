@@ -5,6 +5,8 @@ import {
   generateRefreshToken,
   verifyToken
 } from "./utils/jwt.js";
+import { emitCreateUserEvent } from './messaging/emitEvents.js';
+
 
 export const login = async (email, password) => {
   //Buscar el usuario con el ORM de prisma
@@ -35,6 +37,8 @@ export const login = async (email, password) => {
       userId: user.id
     }
   });
+
+  await emitCreateUserEvent(user.id)
 
   return {
     accessToken,
