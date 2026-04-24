@@ -6,8 +6,6 @@ services:
       POSTGRES_USER: groupapp
       POSTGRES_PASSWORD: groupapp
       POSTGRES_DB: groupapp
-    ports:
-      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -61,6 +59,23 @@ services:
       - backend
     restart: unless-stopped
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  #!Auth Service
   auth-service:
     build: ./auth
     container_name: auth-service
@@ -71,6 +86,7 @@ services:
       DATABASE_URL: postgresql://auth:auth@auth-db:5432/auth_db
       JWT_SECRET: supersecret
       NODE_ENV: development
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
     volumes:
       - ./auth:/app
       - auth_node_modules:/app/node_modules
@@ -82,6 +98,8 @@ services:
     ]
     depends_on:
       auth-db:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     restart: unless-stopped
   
@@ -102,9 +120,56 @@ services:
       timeout: 5s
       retries: 5
 
+  #! Groups Service
+  groups-service:
+    build: ./groups
+    container_name: groups-service
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      DATABASE_URL: postgresql://groups:groups@groups-db:5432/groups_db
+      JWT_SECRET: supersecret
+      NODE_ENV: development
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    volumes:
+      - ./groups:/app
+      - groups_node_modules:/app/node_modules
+    working_dir: /app
+    command: [
+      "sh",
+      "-c",
+      "npm ci && npx prisma generate && npx prisma migrate deploy && exec node server.js",
+    ]
+    depends_on:
+      groups-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+  
+  groups-db:
+    image: postgres:16
+    container_name: groups-db
+    environment:
+      POSTGRES_USER: groups
+      POSTGRES_PASSWORD: groups
+      POSTGRES_DB: groups_db
+    ports:
+      - "5433:5432" 
+    volumes:
+      - groups_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U groups -d groups_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 volumes:
   pgdata:
   backend_node_modules:
   frontend_node_modules:
   auth_node_modules:
   auth_pgdata:
+  groups_node_modules:
+  groups_pgdata:
