@@ -95,46 +95,6 @@ export const emitGroupUpdatedEvent = async (groupId, groupName, updatedByUserId,
     }
 };
 
-// 🗑️ Evento: Usuario removido del grupo
-export const emitUserRemovedEvent = async (groupId, groupName, removedUserId, removedByUserId) => {
-    try {
-        await publishEvent(
-            'groups_exchange',
-            'group.user.removed',
-            {
-                groupId,
-                groupName,
-                removedUserId,
-                removedByUserId,
-                type: 'USER_REMOVED_FROM_GROUP'
-            }
-        );
-    } catch (error) {
-        console.error('Error emitting user removed event:', error);
-        throw error;
-    }
-};
-
-// 🔄 Evento: Rol de usuario actualizado
-export const emitUserRoleChangedEvent = async (groupId, groupName, userId, newRole, changedByUserId) => {
-    try {
-        await publishEvent(
-            'groups_exchange',
-            'group.user.role.changed',
-            {
-                groupId,
-                groupName,
-                userId,
-                newRole,
-                changedByUserId,
-                type: 'USER_ROLE_CHANGED'
-            }
-        );
-    } catch (error) {
-        console.error('Error emitting user role changed event:', error);
-        throw error;
-    }
-};
 
 // ❌ Evento: Grupo eliminado
 export const emitGroupDeletedEvent = async (groupId, groupName, deletedByUserId) => {

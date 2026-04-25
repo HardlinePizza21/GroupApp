@@ -1,45 +1,45 @@
 services:
-  db:
-    image: postgres:16-alpine
-    container_name: groupapp_db
-    environment:
-      POSTGRES_USER: groupapp
-      POSTGRES_PASSWORD: groupapp
-      POSTGRES_DB: groupapp
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U groupapp -d groupapp"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+  # db:
+  #   image: postgres:16-alpine
+  #   container_name: groupapp_db
+  #   environment:
+  #     POSTGRES_USER: groupapp
+  #     POSTGRES_PASSWORD: groupapp
+  #     POSTGRES_DB: groupapp
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U groupapp -d groupapp"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
 
-  backend:
-    build: ./Backend
-    container_name: backend
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./Backend/.env.example
-    environment:
-      DATABASE_URL: postgresql://groupapp:groupapp@db:5432/groupapp
-      # Sin esto, `npm ci` puede omitir devDependencies y no instalaría el CLI de Prisma.
-      NODE_ENV: development
-    volumes:
-      - ./Backend:/app
-      - backend_node_modules:/app/node_modules
-    working_dir: /app
-    # El bind mount tapa node_modules de la imagen; instalamos en el volumen y usamos Prisma local.
-    command:
-      [
-        "sh",
-        "-c",
-        "npm ci && npx prisma generate && npx prisma migrate deploy && exec node server.js",
-      ]
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: unless-stopped
+  # backend:
+  #   build: ./Backend
+  #   container_name: backend
+  #   ports:
+  #     - "3000:3000"
+  #   env_file:
+  #     - ./Backend/.env.example
+  #   environment:
+  #     DATABASE_URL: postgresql://groupapp:groupapp@db:5432/groupapp
+  #     # Sin esto, `npm ci` puede omitir devDependencies y no instalaría el CLI de Prisma.
+  #     NODE_ENV: development
+  #   volumes:
+  #     - ./Backend:/app
+  #     - backend_node_modules:/app/node_modules
+  #   working_dir: /app
+  #   # El bind mount tapa node_modules de la imagen; instalamos en el volumen y usamos Prisma local.
+  #   command:
+  #     [
+  #       "sh",
+  #       "-c",
+  #       "npm ci && npx prisma generate && npx prisma migrate deploy && exec node server.js",
+  #     ]
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   restart: unless-stopped
 
   frontend:
     build: ./Frontend
@@ -55,8 +55,6 @@ services:
     working_dir: /app
     command:
       ["sh", "-c", "npm ci && exec npm run dev"]
-    depends_on:
-      - backend
     restart: unless-stopped
 
   rabbitmq:
@@ -80,11 +78,12 @@ services:
     build: ./auth
     container_name: auth-service
     ports:
-      - "3001:3001"
+      - "3001:3000"
     environment:
-      PORT: 3001
+      PORT: 3000
       DATABASE_URL: postgresql://auth:auth@auth-db:5432/auth_db
-      JWT_SECRET: supersecret
+      JWT_SECRET: dev-jwt-secret-minimo-32-caracteres-cambiar
+      JWT_REFRESH_SECRET: dev-refresh-secret-minimo-32-caracteres-cambiar
       NODE_ENV: development
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
     volumes:
@@ -120,14 +119,14 @@ services:
       timeout: 5s
       retries: 5
 
-  #! Groups Service
+  #! Groups&Channel Service
   groups-service:
     build: ./groups
     container_name: groups-service
     ports:
-      - "3002:3002"
+      - "3002:3000"
     environment:
-      PORT: 3002
+      PORT: 3000
       DATABASE_URL: postgresql://groups:groups@groups-db:5432/groups_db
       JWT_SECRET: supersecret
       NODE_ENV: development
@@ -166,8 +165,8 @@ services:
       retries: 5
 
 volumes:
-  pgdata:
-  backend_node_modules:
+  # pgdata:
+  # backend_node_modules:
   frontend_node_modules:
   auth_node_modules:
   auth_pgdata:

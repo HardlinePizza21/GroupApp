@@ -7,7 +7,7 @@ const connection = await amqp.connect("amqp://guest:guest@localhost:5672");
 const channel = await connection.createChannel();
 
 const correlationId = uuidv4();
-const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc3Njk4NjIwOCwiZXhwIjoxNzc2OTg5ODA4fQ.P7QvvyfuXH87ZRKH-kkZwJgbq0ELxZZdzRt5pSacaLU';
+const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc3NzA3ODI4OSwiZXhwIjoxNzc3MDgxODg5fQ.yNc6o2YRth5JlfHnj6Y4NcZ7kG4A1eTTUhORtgL53o0';
 
 console.log('[x] Requesting verification ', jwt);
 

@@ -3,7 +3,7 @@
 import { getMQChannel } from "../config/rabbitmq.js";
 import { verifyToken } from "../utils/jwt.js";
 
-export const startJWTRpcConsumer = async() => {
+export const startJWTRpcConsumer = async () => {
     const channel = await getMQChannel();
 
     const queue = 'rpc_queue'
@@ -19,19 +19,32 @@ export const startJWTRpcConsumer = async() => {
 
     console.log('[] Awaiting JWT verifications. To exit press CTRL+C');
 
-    //?Queue para simular RPC en RabbitMQ
+    //*Queue para simular RPC en RabbitMQ
     channel.consume(queue, function reply(msg) {
 
-        const result = verifyToken(msg.content.toString(), process.env.JWT_SECRET)
+        try {
+            const result = verifyToken(msg.content.toString(), process.env.JWT_SECRET)
+            
+            console.log('Token verified:', result)
 
-        console.log(result)
+            channel.sendToQueue(msg.properties.replyTo,
+                Buffer.from(JSON.stringify(result)), {
+                correlationId: msg.properties.correlationId
+            });
 
-        channel.sendToQueue(msg.properties.replyTo,
-            Buffer.from(JSON.stringify(result)), {
-            correlationId: msg.properties.correlationId
-        });
+        } catch (error) {
+            console.error('Token verification failed:', error.message)
+            
+            channel.sendToQueue(msg.properties.replyTo,
+                Buffer.from(JSON.stringify({ 
+                    error: 'Invalid token',
+                    message: error.message 
+                })), {
+                correlationId: msg.properties.correlationId
+            });
+        }
 
         channel.ack(msg);
     });
-    
+
 }

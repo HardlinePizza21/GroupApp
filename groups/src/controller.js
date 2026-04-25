@@ -7,6 +7,9 @@ export const createGroup = async (req, res) => {
   try {
     const { name, description } = req.body;
 
+    if(!name || !description)
+        throw new Error("Description or name field missing")
+
     const userId = req.user.userId; // viene del middleware JWT
 
     const group = await groupService.createGroup(
