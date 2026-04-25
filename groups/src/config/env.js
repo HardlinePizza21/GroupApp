@@ -2,13 +2,7 @@ import dotenv from "dotenv";
 
 // Load .env file (Docker Compose will inject these variables)
 
-if(process.env.NODE_ENV == 'development'){
-  dotenv.config({ path: ".docker.env" });
-  
-}else {
-  dotenv.config({ path: ".env" });
-  
-}
+dotenv.config({ path: ".env" });
 
 export default {
   PORT: process.env.PORT,

@@ -1,5 +1,5 @@
-import prisma from "../../config/db.js";
-import { isAdmin } from "../../utils/prisma.js";
+import prisma from "./config/db.js";
+import { isAdmin } from "./utils/prisma.js";
 
 // 🔥 Crear grupo
 export const createGroup = async (name, description, userId) => {

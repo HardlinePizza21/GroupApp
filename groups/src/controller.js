@@ -1,5 +1,6 @@
-import * as groupService from "./group.service.js";
-import prisma from "../../config/db.js";
+import * as groupService from "./service.js";
+import * as emitEvents from "./messaging/emitEvents.js";
+import prisma from "./config/db.js";
 
 // POST /groups
 export const createGroup = async (req, res) => {
@@ -13,6 +14,18 @@ export const createGroup = async (req, res) => {
       description,
       userId
     );
+
+    // 🎯 Emitir evento de grupo creado
+    try {
+      await emitEvents.emitGroupCreatedEvent(
+        group.id,
+        group.name,
+        userId
+      );
+    } catch (emitError) {
+      console.warn('⚠️ Event emission failed, but group was created:', emitError.message);
+      // No fallar la respuesta si la emisión de eventos falla
+    }
 
     res.status(201).json(group);
 
@@ -32,6 +45,18 @@ export const updateGroup = async (req, res) => {
       userId,
       req.body
     );
+
+    // 🎯 Emitir evento de grupo actualizado
+    try {
+      await emitEvents.emitGroupUpdatedEvent(
+        group.id,
+        group.name,
+        userId,
+        req.body
+      );
+    } catch (emitError) {
+      console.warn('⚠️ Event emission failed, but group was updated:', emitError.message);
+    }
 
     res.json(group);
 
@@ -79,6 +104,23 @@ export const inviteUser = async (req, res) => {
       userId,
       finalUserId
     );
+
+    // 🎯 Emitir evento de usuario invitado
+    try {
+      const group = await prisma.group.findUnique({
+        where: { id: groupId }
+      });
+
+      await emitEvents.emitUserInvitedEvent(
+        groupId,
+        group.name,
+        finalUserId,
+        finalUserId,
+        userId
+      );
+    } catch (emitError) {
+      console.warn('⚠️ Event emission failed, but user was invited:', emitError.message);
+    }
 
     res.json(result);
 

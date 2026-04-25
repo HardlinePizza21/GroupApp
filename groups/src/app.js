@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import authRoutes from "./routes.js";
+import groupRoutes from "./routes.js";
 
 
 const app = express();
@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/auth", authRoutes);
+app.use("/groups", groupRoutes);
 
 app.get("/", (req, res) => {
   res.send("API running");
