@@ -131,3 +131,55 @@ export const inviteUser = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+// POST /groups/:groupId/channels
+export const createChannel = async (req, res) => {
+    try {
+        const groupId = parseInt(req.params.groupId);
+        const userId = req.user.userId;
+
+        const { name } = req.body;
+
+        if (!name) {
+            return res.status(400).json({
+                error: "Channel name is required"
+            });
+        }
+
+        const channel = await groupService.createChannel(
+            groupId,
+            userId,
+            name
+        );
+
+        try{
+          await emitEvents.emitChannelCreatedEvent();
+
+        }catch(emitError){
+          console.warn('⚠️ Event emission failed, but channel was created:', emitError.message);
+        }
+
+        res.status(201).json(channel);
+
+    } catch (err) {
+        res.status(403).json({ error: err.message });
+    }
+};
+
+// GET /groups/:groupId/channels
+export const getChannels = async (req, res) => {
+    try {
+        const groupId = parseInt(req.params.groupId);
+        const userId = req.user.userId;
+
+        const channels = await groupService.getChannels(
+            groupId,
+            userId
+        );
+
+        res.json(channels);
+
+    } catch (err) {
+        res.status(403).json({ error: err.message });
+    }
+};

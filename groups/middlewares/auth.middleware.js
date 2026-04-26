@@ -32,7 +32,7 @@ export default async function authMiddleware(req, res, next) {
 
     console.log("User decoded: ", JSON.parse(decoded))
 
-    req.user = decoded;
+    req.user = JSON.parse(decoded);
 
     next();
   } catch(error) {

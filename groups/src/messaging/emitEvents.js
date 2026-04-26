@@ -95,6 +95,26 @@ export const emitGroupUpdatedEvent = async (groupId, groupName, updatedByUserId,
     }
 };
 
+// 📢 Evento: Canal creado
+export const emitChannelCreatedEvent = async (channelId, channelName, groupId, createdByUserId) => {
+    try {
+        await publishEvent(
+            'groups_exchange',
+            'channel.created',
+            {
+                channelId,
+                channelName,
+                groupId,
+                createdByUserId,
+                type: 'CHANNEL_CREATED'
+            }
+        );
+    } catch (error) {
+        console.error('Error emitting channel created event:', error);
+        throw error;
+    }
+};
+
 
 // ❌ Evento: Grupo eliminado
 export const emitGroupDeletedEvent = async (groupId, groupName, deletedByUserId) => {
@@ -114,39 +134,3 @@ export const emitGroupDeletedEvent = async (groupId, groupName, deletedByUserId)
         throw error;
     }
 };
-
-// 🎯 Evento heredado: Usuario creado (para compatibilidad)
-export const emitCreateUserEvent = async (userId) => {
-    let connection = null;
-    let channel = null;
-    try {
-
-        const channel = await getMQChannel();
-
-        if (!userId) {
-            throw new Error('Se debe mandar el id del usuario que se conectó a RabbitMQ')
-        }
-
-        const exchange = 'auth_exchange';
-        const key = 'user.created';
-        const msg = JSON.stringify({ userId, timestamp: new Date().toISOString() })
-
-        await channel.assertExchange(exchange, 'topic', {
-            durable: true
-        });
-
-        const published = channel.publish(exchange, key, Buffer.from(msg));
-
-        if (published) {
-            console.log('✓ [RabbitMQ] Message emitted:', msg);
-        } else {
-            console.warn('⚠ [RabbitMQ] Buffer full, message queued');
-        }
-
-    } catch (error) {
-        console.error('✗ [RabbitMQ] Error emitting user created event:', error.message);
-        if (channel) await channel.close().catch(() => { });
-        if (connection) await connection.close().catch(() => { });
-        throw error;
-    }
-}
