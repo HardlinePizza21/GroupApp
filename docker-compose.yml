@@ -85,7 +85,7 @@ services:
       JWT_SECRET: dev-jwt-secret-minimo-32-caracteres-cambiar
       JWT_REFRESH_SECRET: dev-refresh-secret-minimo-32-caracteres-cambiar
       NODE_ENV: development
-      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      RABBITMQ_URL: amqp://guest:guest@172.31.28.130:5672
     volumes:
       - ./auth:/app
       - auth_node_modules:/app/node_modules
@@ -130,7 +130,7 @@ services:
       DATABASE_URL: postgresql://groups:groups@groups-db:5432/groups_db
       JWT_SECRET: supersecret
       NODE_ENV: development
-      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      RABBITMQ_URL: amqp://guest:guest@172.31.28.130:5672
     volumes:
       - ./groups:/app
       - groups_node_modules:/app/node_modules
@@ -177,7 +177,7 @@ services:
       # DATABASE_URL: prisma+postgres://localhost:51213/?api_key=eyJkYXRhYmFzZVVybCI6InBvc3RncmVzOi8vcG9zdGdyZXM6cG9zdGdyZXNAbG9jYWxob3N0OjUxMjE0L3RlbXBsYXRlMT9zc2xtb2RlPWRpc2FibGUmY29ubmVjdGlvbl9saW1pdD0xJmNvbm5lY3RfdGltZW91dD0wJm1heF9pZGxlX2Nvbm5lY3Rpb25fbGlmZXRpbWU9MCZwb29sX3RpbWVvdXQ9MCZzaW5nbGVfdXNlX2Nvbm5lY3Rpb25zPXRydWUmc29ja2V0X3RpbWVvdXQ9MCIsIm5hbWUiOiJkZWZhdWx0Iiwic2hhZG93RGF0YWJhc2VVcmwiOiJwb3N0Z3JlczovL3Bvc3RncmVzOnBvc3RncmVzQGxvY2FsaG9zdDo1MTIxNS90ZW1wbGF0ZTE_c3NsbW9kZT1kaXNhYmxlJmNvbm5lY3Rpb25fbGltaXQ9MSZjb25uZWN0X3RpbWVvdXQ9MCZtYXhfaWRsZV9jb25uZWN0aW9uX2xpZmV0aW1lPTAmcG9vbF90aW1lb3V0PTAmc2luZ2xlX3VzZV9jb25uZWN0aW9ucz10cnVlJnNvY2tldF90aW1lb3V0PTAifQ
       JWT_SECRET: dev-jwt-secret-minimo-32-caracteres-cambiar
       NODE_ENV: development
-      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      RABBITMQ_URL: amqp://guest:guest@172.31.28.130:5672
     volumes:
       - ./messages-service:/app
       - messages_node_modules:/app/node_modules
@@ -220,7 +220,7 @@ services:
       - "3003:3000"
     environment:
       PORT: 3000
-      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      RABBITMQ_URL: amqp://guest:guest@172.31.28.130:5672
       JWT_SECRET: dev-jwt-secret-minimo-32-caracteres-cambiar
       NODE_ENV: development
     volumes:
