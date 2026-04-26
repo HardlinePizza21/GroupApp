@@ -30,7 +30,7 @@ io.use(async (socket, next) => {
 
   try {
     const decoded = verifyToken(token);
-    socket.userId = decoded.id || decoded.sub;
+    socket.userId = decoded.userId;
     next();
   } catch (err) {
     console.error("[Auth] JWT verification failed:", err.message);

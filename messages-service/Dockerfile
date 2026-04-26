@@ -1,29 +1,20 @@
-FROM node:20-alpine AS base
+# Imagen base ligera
+FROM node:20-alpine
+
+# Directorio de trabajo
 WORKDIR /app
 
-# ── Dependencias ──────────────────────────────────────────
-FROM base AS deps
+# Copiar dependencias
 COPY package*.json ./
-RUN npm ci --omit=dev
 
-# ── Prisma generate ───────────────────────────────────────
-FROM deps AS prisma-gen
-COPY prisma ./prisma
-RUN npx prisma generate
+# Instalar dependencias
+RUN npm install
 
-# ── Imagen final ──────────────────────────────────────────
-FROM base AS runner
-COPY --from=deps       /app/node_modules ./node_modules
-COPY --from=prisma-gen /app/node_modules/.prisma ./node_modules/.prisma
-COPY src ./src
-COPY prisma ./prisma
+# Copiar el resto del código
+COPY . .
 
-# Crear directorio para uploads locales (dev sin S3)
-RUN mkdir -p uploads
+# Exponer puerto interno (no el del host)
+EXPOSE 3004
 
-EXPOSE 3001
-
-HEALTHCHECK --interval=15s --timeout=5s --start-period=10s \
-  CMD wget -qO- http://localhost:3001/health || exit 1
-
-CMD ["node", "src/server.js"]
+# Comando de arranque
+CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]

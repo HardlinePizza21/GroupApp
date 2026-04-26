@@ -1,7 +1,8 @@
-import app from "./app.js";
-import { getMQChannel } from "./config/rabbitmq.js";
+import "./src/config/env.js";
+import app from "./src/app.js";
+import { getMQChannel } from "./src/config/rabbitmq.js";
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 const start = async () => {
   try {

@@ -164,6 +164,75 @@ services:
       timeout: 5s
       retries: 5
 
+  #! Messages Service
+  messages-service:
+    build: ./messages-service
+    container_name: messages-service
+    ports:
+      - "3004:3000"
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://messages:messages@messages-db:5432/messages_db
+      #!Esta la variable cuando se despliegue en aws
+      # DATABASE_URL: prisma+postgres://localhost:51213/?api_key=eyJkYXRhYmFzZVVybCI6InBvc3RncmVzOi8vcG9zdGdyZXM6cG9zdGdyZXNAbG9jYWxob3N0OjUxMjE0L3RlbXBsYXRlMT9zc2xtb2RlPWRpc2FibGUmY29ubmVjdGlvbl9saW1pdD0xJmNvbm5lY3RfdGltZW91dD0wJm1heF9pZGxlX2Nvbm5lY3Rpb25fbGlmZXRpbWU9MCZwb29sX3RpbWVvdXQ9MCZzaW5nbGVfdXNlX2Nvbm5lY3Rpb25zPXRydWUmc29ja2V0X3RpbWVvdXQ9MCIsIm5hbWUiOiJkZWZhdWx0Iiwic2hhZG93RGF0YWJhc2VVcmwiOiJwb3N0Z3JlczovL3Bvc3RncmVzOnBvc3RncmVzQGxvY2FsaG9zdDo1MTIxNS90ZW1wbGF0ZTE_c3NsbW9kZT1kaXNhYmxlJmNvbm5lY3Rpb25fbGltaXQ9MSZjb25uZWN0X3RpbWVvdXQ9MCZtYXhfaWRsZV9jb25uZWN0aW9uX2xpZmV0aW1lPTAmcG9vbF90aW1lb3V0PTAmc2luZ2xlX3VzZV9jb25uZWN0aW9ucz10cnVlJnNvY2tldF90aW1lb3V0PTAifQ
+      JWT_SECRET: dev-jwt-secret-minimo-32-caracteres-cambiar
+      NODE_ENV: development
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    volumes:
+      - ./messages-service:/app
+      - messages_node_modules:/app/node_modules
+    working_dir: /app
+    command:
+      [
+        "sh",
+        "-c",
+        "npm ci && npx prisma generate && exec node server.js",
+      ]
+    depends_on:
+      messages-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  messages-db:
+    image: postgres:16
+    container_name: messages-db
+    environment:
+      POSTGRES_USER: messages
+      POSTGRES_PASSWORD: messages
+      POSTGRES_DB: messages_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - messages_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U messages -d messages_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  #! Notifications Service
+  notifications-service:
+    build: ./notifications
+    container_name: notifications-service
+    ports:
+      - "3003:3000"
+    environment:
+      PORT: 3000
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      JWT_SECRET: dev-jwt-secret-minimo-32-caracteres-cambiar
+      NODE_ENV: development
+    volumes:
+      - ./notifications:/app
+      - notifications_node_modules:/app/node_modules
+    working_dir: /app
+    command: ["sh", "-c", "npm ci && exec npm start"]
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   # pgdata:
   # backend_node_modules:
@@ -172,3 +241,6 @@ volumes:
   auth_pgdata:
   groups_node_modules:
   groups_pgdata:
+  messages_node_modules:
+  messages_pgdata:
+  notifications_node_modules:

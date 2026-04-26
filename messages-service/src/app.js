@@ -12,4 +12,8 @@ app.get("/health", (req, res) => res.json({ status: "ok", service: "messages" })
 
 app.use("/", messageRoutes);
 
+app.get("/", (req, res) => {
+  res.send("API running");
+});
+
 export default app;

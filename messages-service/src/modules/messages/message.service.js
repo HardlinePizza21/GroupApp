@@ -5,10 +5,7 @@ import { emitMessageSentEvent } from "../../messaging/emitEvents.js";
 /* ── Obtener un mensaje por id ── */
 export const getMessage = async (messageId) => {
   const message = await prisma.message.findUnique({
-    where: { id: messageId },
-    include: {
-      sender: { select: { id: true, username: true } },
-    },
+    where: { id: messageId }
   });
 
   if (!message) throw new Error("Message not found");
@@ -23,7 +20,6 @@ export const getMessage = async (messageId) => {
 export const getMessages = async (channelId, page = 1, limit = 50) => {
   const messages = await prisma.message.findMany({
     where:   { channelId: parseInt(channelId) },
-    include: { sender: { select: { id: true, username: true } } },
     orderBy: { createdAt: "asc" },
     skip:    (page - 1) * limit,
     take:    limit,
@@ -56,10 +52,7 @@ export const createMessage = async (channelId, userId, content, file) => {
       senderId:  userId,
       channelId,
       ...fileData,
-    },
-    include: {
-      sender: { select: { id: true, username: true } },
-    },
+    }
   });
 
   // 3. Construir objeto completo con URL pública (no el key interno)
