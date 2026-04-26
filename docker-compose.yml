@@ -22,7 +22,7 @@ services:
     env_file:
       - ./Backend/.env.example
     environment:
-      DATABASE_URL: postgresql://groupapp:groupapp@db:5432/groupapp
+      DATABASE_URL: postgresql://postgres:samuel14madrid@database-1.c1ceeukuom6z.us-east-1.rds.amazonaws.com:5432/postgres
       # Sin esto, `npm ci` puede omitir devDependencies y no instalaría el CLI de Prisma.
       NODE_ENV: development
     volumes:
@@ -234,8 +234,8 @@ services:
     restart: unless-stopped
 
 volumes:
-  # pgdata:
-  # backend_node_modules:
+  pgdata:
+  backend_node_modules:
   frontend_node_modules:
   auth_node_modules:
   auth_pgdata:
