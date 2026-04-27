@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthGrpc {
+  rpc VerifyToken (TokenRequest) returns (TokenResponse);
+}
+
+message TokenRequest {
+  string token = 1;
+}
+
+message TokenResponse {
+  bool valid = 1;
+  int32 userId = 2;
+  string message = 3;
+}

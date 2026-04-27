@@ -4,6 +4,9 @@ import authMiddleware from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
+// gRPC demo: groups -> auth
+router.post("/grpc/verify-token", controller.verifyTokenGrpc);
+
 // 🔐 todas protegidas
 router.get("/my", authMiddleware, controller.getMyGroups);
 router.post("/", authMiddleware, controller.createGroup);

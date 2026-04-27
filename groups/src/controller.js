@@ -1,6 +1,7 @@
 import * as groupService from "./service.js";
 import * as emitEvents from "./messaging/emitEvents.js";
 import prisma from "./config/db.js";
+import { verifyTokenViaGrpc } from "./grpc/authGrpcClient.js";
 
 // POST /groups
 export const createGroup = async (req, res) => {
@@ -182,4 +183,20 @@ export const getChannels = async (req, res) => {
     } catch (err) {
         res.status(403).json({ error: err.message });
     }
+};
+
+// POST /groups/grpc/verify-token
+export const verifyTokenGrpc = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(400).json({ error: "token is required" });
+    }
+
+    const result = await verifyTokenViaGrpc(token);
+    res.json(result);
+  } catch (err) {
+    res.status(502).json({ error: "gRPC auth call failed", message: err.message });
+  }
 };
