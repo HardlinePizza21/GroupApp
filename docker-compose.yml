@@ -143,8 +143,6 @@ services:
     depends_on:
       groups-db:
         condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
     restart: unless-stopped
   
   groups-db:
