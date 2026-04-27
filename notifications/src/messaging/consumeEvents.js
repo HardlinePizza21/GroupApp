@@ -1,34 +1,45 @@
-import { io } from "socket.io-client";
+import { getMQChannel } from "../config/rabbitmq.js";
 
-// 🔐 Pega aquí un JWT válido de tu auth-service
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc3NzIzNDQyMywiZXhwIjoxNzc3MjM4MDIzfQ.WCqPVcDre8G6fTTboVnTQzK1sTUP5ZbUJeOja-SRSvs";
+const EXCHANGE = "messages_exchange";
+const KEY = "message.sent";
 
-const socket = io("http://localhost:3003", {
-  auth: {
-    token: TOKEN,
-  },
-});
+export const consumeMessageEvents = async (io) => {
+  const channel = await getMQChannel();
 
-const CHANNEL_ID = 1;
+  // Asegurar que el exchange existe
+  await channel.assertExchange(EXCHANGE, "topic", { durable: true });
 
-socket.on("connect", () => {
-  console.log("✅ Conectado:", socket.id);
+  // Crear cola exclusiva para este servicio
+  const queue = await channel.assertQueue("", { exclusive: true });
 
-  // Unirse al canal
-  socket.emit("join_channel", CHANNEL_ID);
-  console.log(`📡 Unido a channel:${CHANNEL_ID}`);
-});
+  // Bindear al exchange
+  await channel.bindQueue(queue.queue, EXCHANGE, KEY);
 
-// 🔥 Evento clave (el que emite tu notifications-service)
-socket.on("receive_message", (data) => {
-  console.log("📩 Mensaje recibido:", data);
-});
+  console.log(`[RabbitMQ] Bound to ${EXCHANGE}/${KEY}`);
 
-// Debug total (opcional pero útil)
-socket.onAny((event, ...args) => {
-  console.log("🛰️ Evento:", event, args);
-});
+  // Consumir mensajes
+  channel.consume(queue.queue, (msg) => {
+    if (!msg) return;
 
-socket.on("disconnect", () => {
-  console.log("❌ Desconectado");
-});
+    try {
+      const event = JSON.parse(msg.content.toString());
+      const { channelId, message } = event;
+
+      // Emitir solo IDs mínimos a los clientes del canal
+      const room = `channel:${channelId}`;
+      io.to(room).emit("receive_message", {
+        messageId: message.id,
+        channelId: channelId,
+        timestamp: new Date().toISOString()
+      });
+
+      console.log(
+        `✓ [Socket] Notified ${room} about message ${message.id}`
+      );
+    } catch (err) {
+      console.error("[RabbitMQ Consumer] Error:", err.message);
+    }
+
+    channel.ack(msg);
+  });
+};
